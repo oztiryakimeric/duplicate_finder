@@ -11,8 +11,21 @@ class Folder:
         self.__write_errors()
 
     def has_duplicate_of(self, other):
+        print("\t\tin folder: " + self.path)
+        duplicate_list = []
+
         for file in self.file_list:
-            if(file == other and id(file) != id(other)): return file
+            if(file == other and id(file) != id(other)):
+                print("\t\t\tDuplicate found: " + str(file))
+                duplicate_list.append(file)
+
+        for folder in self.subfolder_list:
+            scan_result = folder.has_duplicate_of(other)
+            if(scan_result):
+                for duplicate in scan_result:
+                    duplicate_list.append(duplicate)
+
+        if(len(duplicate_list) != 0): return duplicate_list
         return False
 
     def __walk(self):
@@ -43,9 +56,9 @@ class Folder:
 
     def __write_errors(self):
         if(len(self.__errors) != 0):
-            if not os.path.exists(os.path.join("errors", self.path)):
-                os.makedirs(os.path.join("errors", self.path))
-            error_file = open(os.path.join("errors", self.path) + "_parsing.txt", "w")
+            if not os.path.exists("errors"):
+                os.makedirs("errors")
+            error_file = open("errors/" + self.path.replace("/", "_") + ".txt", "w")
             error_file.writelines(self.__errors)
             error_file.close()
 
