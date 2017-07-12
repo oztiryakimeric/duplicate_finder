@@ -3,30 +3,13 @@ from src.ImageFile import ImageFile
 
 class Folder:
     def __init__(self, path):
+        print("Traversing " + path + "...")
         self.path = path
         self.file_list = []
         self.subfolder_list = []
         self.__errors = []
         self.__walk()
-        self.__write_errors()
-
-    def has_duplicate_of(self, other):
-        print("\t\tin folder: " + self.path)
-        duplicate_list = []
-
-        for file in self.file_list:
-            if(file == other and id(file) != id(other)):
-                print("\t\t\tDuplicate found: " + str(file))
-                duplicate_list.append(file)
-
-        for folder in self.subfolder_list:
-            scan_result = folder.has_duplicate_of(other)
-            if(scan_result):
-                for duplicate in scan_result:
-                    duplicate_list.append(duplicate)
-
-        if(len(duplicate_list) != 0): return duplicate_list
-        return False
+        #self.__write_errors()
 
     def __walk(self):
         try:
@@ -55,7 +38,7 @@ class Folder:
             return False
 
     def __write_errors(self):
-        if(len(self.__errors) != 0):
+        if len(self.__errors) != 0:
             if not os.path.exists("errors"):
                 os.makedirs("errors")
             error_file = open("errors/" + self.path.replace("/", "_") + ".txt", "w")
@@ -64,10 +47,10 @@ class Folder:
 
     def __print(self, path, file_list, indent_level):
         if indent_level <= 2: text = str(path) + ":\n"
-        else: text = "\t"*(indent_level-2) +  str(path) + ":\n"
+        else: text = "\t"*(indent_level-2) + "|-" + str(path) + ":\n"
 
         for file in file_list:
-            text += "\t"*indent_level + str(file) + "\n"
+            text += "\t"*indent_level + "|-" + str(file) + "\n"
         return text
 
     def __str__(self):
@@ -75,6 +58,6 @@ class Folder:
 
         indent_counter = 2
         for folder in self.subfolder_list:
-            text += "\t" + self.__print(folder.path, folder.file_list, indent_counter)
+            text += "\t" + "|-" + self.__print(folder.path, folder.file_list, indent_counter)
             indent_counter += 1
         return text

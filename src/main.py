@@ -1,16 +1,21 @@
-import os
-import sys, getopt
 from src.Folder import Folder
 from src.Scanner import Scanner
+from src.DuplicateHandler import DuplicateHandler
 
 test_folder = "../test_folder"
 test_folder_2 = "../test_folder_2"
 
-first_folder = Folder(test_folder)
-second_folder = Folder(test_folder_2)
+folder = "/volumes/Adsız/resimler/"
+copy_destination = "/volumes/Adsız/uni/"
 
-print(first_folder)
-print(second_folder)
+first_folder = Folder(folder)
 
-scanner = Scanner([first_folder, second_folder])
-scanner.start()
+#print(first_folder)
+#print(second_folder)
+
+scanner = Scanner([first_folder,])
+scanner.scan()
+scanner.printDuplicates()
+
+handler = DuplicateHandler(scanner.duplicate_dict, copy_destination)
+handler.start()
