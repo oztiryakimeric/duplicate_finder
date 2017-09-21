@@ -1,0 +1,1 @@
+Duplicate photo finder program that written with python. I builded this program to clean my photo library. This program finds the duplicate photos and evaluate the best copy in terms of its exif data.
