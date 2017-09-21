@@ -9,7 +9,6 @@ class Folder:
         self.subfolder_list = []
         self.__errors = []
         self.__walk()
-        #self.__write_errors()
 
     def __walk(self):
         try:

@@ -1,19 +1,22 @@
 import os, hashlib
 from PIL import Image
+import imagehash
 
 class ImageFile:
     def __init__(self, path):
         self.path = path
         self.__errors = []
-        self.img = Image.open(path)
-        self.weight = self.__calculate_exif_weight()
+        temp_img = self.get_img()
+        self.hash = self.__calculate_hash(temp_img)
+        self.weight = self.__calculate_exif_weight(temp_img)
 
-    def __calculate_exif_weight(self):
+    def __calculate_exif_weight(self, img):
         try:
-            exif = self.img._getexif()
+            exif = img._getexif()
         except:
             return 0
-        if exif == None: return 0
+        if exif is None:
+            return 0
 
         weight = 0
         for k in exif:
@@ -21,20 +24,14 @@ class ImageFile:
                 weight += 1
         return weight;
 
-    def get_exif_data(self):
-        exif = self.img._getexif()
-        if exif == None: return 0
+    def __calculate_hash(self, img):
+        return imagehash.average_hash(img)
 
-        for k in exif:
-            print(str(k) + " -> " + str(exif[k]), end=",")
-
+    def get_img(self):
+        return Image.open(self.path)
 
     def __str__(self):
         return os.path.basename(self.path) + " - " + str(self.weight)
 
-    def __eq__(self, other):
-        return list(self.img.getdata()) == list(other.img.getdata())
 
-    def hash(self):
-        hash_obj = hashlib.sha512(self.img.tobytes())
-        return hash_obj.hexdigest()
+

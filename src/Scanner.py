@@ -20,11 +20,11 @@ class Scanner:
             self.__walk_folders(folder.subfolder_list)
 
     def __addToDictonary(self, file):
-        if file.hash() not in self.duplicate_dict:
+        if file.hash not in self.duplicate_dict:
             duplicates = [file]
-            self.duplicate_dict[file.hash()] = duplicates
+            self.duplicate_dict[file.hash] = duplicates
         else:
-            self.duplicate_dict[file.hash()].append(file)
+            self.duplicate_dict[file.hash].append(file)
 
     def printDuplicates(self):
         index = 1;
